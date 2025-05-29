@@ -1,7 +1,8 @@
-import { Entity } from "@/core/entities/Entity"
-import { UniqueEntityID } from "@/core/entities/unique-entity-id"
+import { Optional } from '@/core/@types/optional'
+import { Entity } from '@/core/entities/Entity'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
-type Role = 'ADMIN' | 'DELIVERYMAN'
+export type Role = 'ADMIN' | 'DELIVERYMAN'
 
 export interface UserProps {
   name: string
@@ -13,53 +14,60 @@ export interface UserProps {
   createdAt: Date
 }
 
-export class User extends Entity<UserProps>{
-  static create(props: UserProps, id: UniqueEntityID){
-    const user = new User({
-      ...props
-    }, id)
+export class User extends Entity<UserProps> {
+  static create(props: Optional<UserProps, 'createdAt'>, id?: UniqueEntityID) {
+    const user = new User(
+      {
+        ...props,
+        createdAt: props.createdAt ?? new Date(),
+      },
+      id,
+    )
 
-    return user 
+    return user
   }
 
-  get name(){
+  get name() {
     return this.props.name
   }
 
-  get phone(){
+  get phone() {
     return this.props.phone
   }
 
-  get cpf(){
+  get role() {
+    return this.props.role
+  }
+
+  get cpf() {
     return this.props.cpf
   }
 
-  get email(){
+  get email() {
     return this.props.email
   }
 
   get password() {
     return this.props.password
   }
-  
-  get createdAt(){
+
+  get createdAt() {
     return this.props.createdAt
   }
 
-  set name(name: string){
+  set name(name: string) {
     this.props.name = name
   }
 
-  set phone(phone: string){
+  set phone(phone: string) {
     this.props.phone = phone
   }
 
-  set email(email: string){
+  set email(email: string) {
     this.props.email = email
   }
 
   set password(password: string) {
     this.props.password = password
   }
-  
 }
