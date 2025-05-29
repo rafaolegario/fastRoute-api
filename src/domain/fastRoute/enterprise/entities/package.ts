@@ -1,5 +1,5 @@
-import { Entity } from "@/core/entities/Entity"
-import { UniqueEntityID } from "@/core/entities/unique-entity-id"
+import { Entity } from '@/core/entities/Entity'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 type status = 'PENDING' | 'AVAILABLE' | 'IN_TRANSIT' | 'DELIVERED' | 'RETURNED'
 
@@ -16,15 +16,17 @@ export interface PackageProps {
   createdAt: Date
 }
 
-export class Package extends Entity<PackageProps>{
-  static create(props: PackageProps, id: UniqueEntityID){
-    const pack = new Package({
-      ...props
-    }, id)
+export class Package extends Entity<PackageProps> {
+  static create(props: PackageProps, id: UniqueEntityID) {
+    const pack = new Package(
+      {
+        ...props,
+      },
+      id,
+    )
 
     return pack
   }
-
 
   get title() {
     return this.props.title
@@ -105,5 +107,4 @@ export class Package extends Entity<PackageProps>{
   set status(value) {
     this.props.status = value
   }
-  
 }

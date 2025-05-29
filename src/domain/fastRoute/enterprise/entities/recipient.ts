@@ -1,15 +1,15 @@
-import { Entity } from "@/core/entities/Entity"
-import { UniqueEntityID } from "@/core/entities/unique-entity-id"
+import { Entity } from '@/core/entities/Entity'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 type address = {
-  street: string,
-  number: string, 
-  city: string,
-  state: string,
-  zipCode: string,
-  latitude?: number,
-  longitude?: number,
-  complement?:string
+  street: string
+  number: string
+  city: string
+  state: string
+  zipCode: string
+  latitude?: number
+  longitude?: number
+  complement?: string
 }
 
 export interface RecipientProps {
@@ -21,33 +21,35 @@ export interface RecipientProps {
   createdAt: Date
 }
 
-export class Recipient extends Entity<RecipientProps>{
-  static create(props: RecipientProps, id: UniqueEntityID){
-    const recipient = new Recipient({
-      ...props
-    }, id)
+export class Recipient extends Entity<RecipientProps> {
+  static create(props: RecipientProps, id: UniqueEntityID) {
+    const recipient = new Recipient(
+      {
+        ...props,
+      },
+      id,
+    )
 
     return recipient
   }
 
-  get name(){
+  get name() {
     return this.props.name
   }
 
-  get phone(){
+  get phone() {
     return this.props.phone
   }
 
-  get cpf(){
+  get cpf() {
     return this.props.cpf
   }
 
-  get email(){
+  get email() {
     return this.props.email
   }
 
-  get createdAt(){
+  get createdAt() {
     return this.props.createdAt
   }
-
 }
