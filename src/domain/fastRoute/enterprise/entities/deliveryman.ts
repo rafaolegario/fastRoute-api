@@ -1,41 +1,69 @@
-import { Entity } from "@/core/entities/Entity"
-import { UniqueEntityID } from "@/core/entities/unique-entity-id"
+import { Optional } from '@/core/@types/optional'
+import { Entity } from '@/core/entities/Entity'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 type currentLocation = {
   latitude: number
   longitude: number
 }
 
+export type Vehicle = {
+  licensePlate: string
+  type: 'motorcycle' | 'car' | 'truck' | 'van'
+  model: string
+  brand: string
+  color: string
+  year: number
+  registrationDocumentUrl?: string
+}
+
 export interface DeliverymanProps {
   userId: UniqueEntityID
+  driveLicense: string
+  vehicle: Vehicle
   currentLocation?: currentLocation
-  status: boolean
+  status: 'ONLINE' | 'OFFLINE'
   createdAt: Date
 }
 
-export class Deliveryman extends Entity<DeliverymanProps>{
-  static create(props: DeliverymanProps, id: UniqueEntityID){
-    const deliveryman = new Deliveryman({
-      ...props
-    }, id)
+export class Deliveryman extends Entity<DeliverymanProps> {
+  static create(
+    props: Optional<DeliverymanProps, 'createdAt' | 'status'>,
+    id?: UniqueEntityID,
+  ) {
+    const deliveryman = new Deliveryman(
+      {
+        ...props,
+        createdAt: props.createdAt ?? new Date(),
+        status: props.status ?? 'OFFLINE',
+      },
+      id,
+    )
 
-    return deliveryman 
+    return deliveryman
   }
 
-  get userId(){
+  get userId() {
     return this.props.userId
   }
 
-  get latitude(){
+  get latitude() {
     return this.props.currentLocation?.latitude
   }
 
-  get longitude(){
+  get longitude() {
     return this.props.currentLocation?.longitude
   }
 
-  get createdAt(){
+  get createdAt() {
     return this.props.createdAt
   }
-  
+
+  get vehicle() {
+    return this.props.vehicle
+  }
+
+  get driveLicense() {
+    return this.props.driveLicense
+  }
 }
