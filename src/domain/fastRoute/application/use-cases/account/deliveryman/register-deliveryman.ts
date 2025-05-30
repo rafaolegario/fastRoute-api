@@ -1,6 +1,6 @@
 import { Vehicle } from '@/domain/fastRoute/enterprise/entities/deliveryman'
 import { CreateDeliverymanUseCase } from './create-deliveryman'
-import { CreateUserUseCase } from './create-user'
+import { CreateUserUseCase } from '../create-user'
 
 interface RegisterDeliverymanRequest {
   name: string

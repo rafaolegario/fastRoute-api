@@ -43,7 +43,7 @@ export class CreateUserUseCase {
     })
 
     await this.usersRepository.create(user)
-
+    console.log(user)
     return { user }
   }
 }

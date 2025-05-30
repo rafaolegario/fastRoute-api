@@ -1,9 +1,9 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { DeliverymansRepository } from '../../repositories/deliverymans-repository'
 import {
   Deliveryman,
   Vehicle,
 } from '@/domain/fastRoute/enterprise/entities/deliveryman'
+import { DeliverymansRepository } from '../../../repositories/deliverymans-repository'
 
 interface CreateDeliverymanRequest {
   userId: string
@@ -37,6 +37,8 @@ export class CreateDeliverymanUseCase {
     })
 
     await this.deliverymansRepository.create(deliveryman)
+
+    console.log(deliveryman)
 
     return { deliveryman }
   }
