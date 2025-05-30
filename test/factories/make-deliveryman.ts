@@ -1,24 +1,32 @@
 import { faker } from '@faker-js/faker'
 
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { User, UserProps } from '@/domain/fastRoute/enterprise/entities/user'
+import {
+  Deliveryman,
+  DeliverymanProps,
+} from '@/domain/fastRoute/enterprise/entities/deliveryman'
 
-export function MakeUser(
-  override: Partial<UserProps> = {},
+export function MakeDeliveryman(
+  override: Partial<DeliverymanProps> = {},
   id?: UniqueEntityID,
 ) {
-  const user = User.create(
+  const deliveryman = Deliveryman.create(
     {
-      name: faker.person.fullName(),
-      cpf: faker.string.numeric(11),
-      email: faker.internet.email(),
-      password: faker.internet.password(),
-      phone: faker.phone.number(),
-      role: ['ADMIN'],
+      userId: new UniqueEntityID(),
+      driveLicense: faker.lorem.words(),
+      vehicle: {
+        color: faker.vehicle.color(),
+        licensePlate: faker.lorem.words(),
+        brand: faker.internet.userAgent(),
+        model: faker.vehicle.model(),
+        type: 'car',
+        year: faker.number.int(),
+        registrationDocumentUrl: faker.internet.url(),
+      },
       ...override,
     },
     id,
   )
 
-  return user
+  return deliveryman
 }
