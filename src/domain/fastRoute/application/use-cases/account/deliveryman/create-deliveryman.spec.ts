@@ -2,6 +2,7 @@ import { InMemoryUsersRepository } from 'test/repositories/in-memory-users-repos
 import { CreateDeliverymanUseCase } from './create-deliveryman'
 import { InMemoryDeliverymansRepository } from 'test/repositories/in-memory-deliveryman-repository'
 import { MakeUser } from 'test/factories/make-user'
+import { ResourceAlreadyExists } from '../../../errors/resource-already-exists-error'
 
 let inMemoryUsersRepository: InMemoryUsersRepository
 let inMemoryDeliverymanRepository: InMemoryDeliverymansRepository
@@ -21,7 +22,7 @@ describe('Create DeliveryMan', () => {
 
     inMemoryUsersRepository.items.push(user)
 
-    await sut.execute({
+    const result = await sut.execute({
       userId: user.id.toString(),
       driveLicense: 'drive-example',
       vehicle: {
@@ -35,6 +36,7 @@ describe('Create DeliveryMan', () => {
       },
     })
 
+    expect(result.isRight()).toBe(true)
     expect(inMemoryDeliverymanRepository.items).toHaveLength(1)
   })
 
@@ -45,7 +47,7 @@ describe('Create DeliveryMan', () => {
 
     inMemoryUsersRepository.items.push(user)
 
-    await sut.execute({
+    const firstResult = await sut.execute({
       userId: user.id.toString(),
       driveLicense: 'drive-example',
       vehicle: {
@@ -59,20 +61,23 @@ describe('Create DeliveryMan', () => {
       },
     })
 
-    await expect(() =>
-      sut.execute({
-        userId: user.id.toString(),
-        driveLicense: 'drive-example',
-        vehicle: {
-          licensePlate: 'ABC-1234',
-          type: 'motorcycle',
-          model: 'xx 160 xxxx',
-          brand: 'xxxxx',
-          color: 'black',
-          year: 2022,
-          registrationDocumentUrl: 'https://example.com/docs/vehicle.pdf',
-        },
-      }),
-    ).rejects.toThrowError('Deliveryman already exists')
+    expect(firstResult.isRight()).toBe(true)
+
+    const secondResult = await sut.execute({
+      userId: user.id.toString(),
+      driveLicense: 'drive-example',
+      vehicle: {
+        licensePlate: 'ABC-1234',
+        type: 'motorcycle',
+        model: 'xx 160 xxxx',
+        brand: 'xxxxx',
+        color: 'black',
+        year: 2022,
+        registrationDocumentUrl: 'https://example.com/docs/vehicle.pdf',
+      },
+    })
+
+    expect(secondResult.isLeft()).toBe(true)
+    expect(secondResult.value).toBeInstanceOf(ResourceAlreadyExists)
   })
 })

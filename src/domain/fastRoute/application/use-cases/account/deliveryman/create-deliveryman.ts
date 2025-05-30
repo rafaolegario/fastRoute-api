@@ -4,6 +4,8 @@ import {
   Vehicle,
 } from '@/domain/fastRoute/enterprise/entities/deliveryman'
 import { DeliverymansRepository } from '../../../repositories/deliverymans-repository'
+import { Either, left, right } from '@/core/repositories/either'
+import { ResourceAlreadyExists } from '@/domain/fastRoute/application/errors/resource-already-exists-error'
 
 interface CreateDeliverymanRequest {
   userId: string
@@ -11,9 +13,12 @@ interface CreateDeliverymanRequest {
   vehicle: Vehicle
 }
 
-interface CreateDeliverymanResponse {
-  deliveryman: Deliveryman
-}
+type CreateDeliverymanResponse = Either<
+  ResourceAlreadyExists,
+  {
+    deliveryman: Deliveryman
+  }
+>
 
 export class CreateDeliverymanUseCase {
   constructor(private deliverymansRepository: DeliverymansRepository) {}
@@ -27,7 +32,7 @@ export class CreateDeliverymanUseCase {
       await this.deliverymansRepository.findByUserId(userId)
 
     if (deliverymanAlreadyExists) {
-      throw new Error('Deliveryman already exists')
+      return left(new ResourceAlreadyExists('DeliveryMan', `UserId: ${userId}`))
     }
 
     const deliveryman = Deliveryman.create({
@@ -38,8 +43,6 @@ export class CreateDeliverymanUseCase {
 
     await this.deliverymansRepository.create(deliveryman)
 
-    console.log(deliveryman)
-
-    return { deliveryman }
+    return right({ deliveryman })
   }
 }
