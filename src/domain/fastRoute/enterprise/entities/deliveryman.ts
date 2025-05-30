@@ -2,7 +2,7 @@ import { Optional } from '@/core/@types/optional'
 import { Entity } from '@/core/entities/Entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
-type currentLocation = {
+export type currentLocation = {
   latitude: number
   longitude: number
 }
@@ -47,14 +47,6 @@ export class Deliveryman extends Entity<DeliverymanProps> {
     return this.props.userId
   }
 
-  get latitude() {
-    return this.props.currentLocation?.latitude
-  }
-
-  get longitude() {
-    return this.props.currentLocation?.longitude
-  }
-
   get createdAt() {
     return this.props.createdAt
   }
@@ -65,5 +57,21 @@ export class Deliveryman extends Entity<DeliverymanProps> {
 
   get driveLicense() {
     return this.props.driveLicense
+  }
+
+  get status() {
+    return this.props.status
+  }
+
+  toggleStatus(status: 'ONLINE' | 'OFFLINE') {
+    this.props.status = status
+  }
+
+  getLocation() {
+    return this.props.currentLocation
+  }
+
+  setLocation(latitude: number, longitude: number) {
+    this.props.currentLocation = { latitude, longitude }
   }
 }
