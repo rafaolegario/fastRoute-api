@@ -11,7 +11,7 @@ describe('Create User', () => {
   })
 
   it('Should be able to create an user', async () => {
-    await sut.execute({
+    const result = await sut.execute({
       name: 'JonhDoe',
       cpf: '123.456.789-11',
       email: 'jonhDoe@example.com',
@@ -19,7 +19,7 @@ describe('Create User', () => {
       phone: '(01) 11111-1111',
       role: ['ADMIN'],
     })
-
+    expect(result.isRight()).toBe(true)
     expect(inMemoryUsersRepository.items).toHaveLength(1)
   })
 })
