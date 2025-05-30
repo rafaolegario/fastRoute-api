@@ -1,6 +1,8 @@
 import { Vehicle } from '@/domain/fastRoute/enterprise/entities/deliveryman'
 import { CreateDeliverymanUseCase } from './create-deliveryman'
 import { CreateUserUseCase } from '../create-user'
+import { Either, right } from '@/core/repositories/either'
+import { ResourceAlreadyExists } from '../../../errors/resource-already-exists-error'
 
 interface RegisterDeliverymanRequest {
   name: string
@@ -12,10 +14,13 @@ interface RegisterDeliverymanRequest {
   vehicle: Vehicle
 }
 
-interface RegisterDeliverymanResponse {
-  userId: string
-  deliverymanId: string
-}
+type RegisterDeliverymanResponse = Either<
+  ResourceAlreadyExists,
+  {
+    userId: string
+    deliverymanId: string
+  }
+>
 
 export class RegisterDeliverymanUseCase {
   constructor(
@@ -32,7 +37,7 @@ export class RegisterDeliverymanUseCase {
     driveLicense,
     vehicle,
   }: RegisterDeliverymanRequest): Promise<RegisterDeliverymanResponse> {
-    const { user } = await this.createUser.execute({
+    const userResult = await this.createUser.execute({
       name,
       cpf,
       email,
@@ -41,15 +46,27 @@ export class RegisterDeliverymanUseCase {
       role: ['DELIVERYMAN'],
     })
 
-    const { deliveryman } = await this.createDeliveryman.execute({
+    if (userResult.isLeft()) {
+      throw userResult.value
+    }
+
+    const { user } = userResult.value
+
+    const deliverymanResult = await this.createDeliveryman.execute({
       userId: user.id.toString(),
       driveLicense,
       vehicle,
     })
 
-    return {
+    if (deliverymanResult.isLeft()) {
+      throw deliverymanResult.value
+    }
+
+    const { deliveryman } = deliverymanResult.value
+
+    return right({
       userId: user.id.toString(),
       deliverymanId: deliveryman.id.toString(),
-    }
+    })
   }
 }

@@ -1,8 +1,8 @@
 import { InMemoryUsersRepository } from 'test/repositories/in-memory-users-repositort'
 import { InMemoryDeliverymansRepository } from 'test/repositories/in-memory-deliveryman-repository'
-import { RegisterDeliverymanUseCase } from './register-deliveryman'
-import { CreateUserUseCase } from './create-user'
 import { CreateDeliverymanUseCase } from './create-deliveryman'
+import { CreateUserUseCase } from '../create-user'
+import { RegisterDeliverymanUseCase } from './register-deliveryman'
 
 let inMemoryUsersRepository: InMemoryUsersRepository
 let inMemoryDeliverymanRepository: InMemoryDeliverymansRepository
@@ -26,7 +26,7 @@ describe('Register DeliveryMan', () => {
   })
 
   it('Should be able to register an deliveryman', async () => {
-    await sut.execute({
+    const result = await sut.execute({
       name: 'JonhDoe',
       cpf: '123.456.789-11',
       email: 'jonhDoe@example.com',
@@ -44,6 +44,7 @@ describe('Register DeliveryMan', () => {
       },
     })
 
+    expect(result.isRight()).toBe(true)
     expect(inMemoryDeliverymanRepository.items).toHaveLength(1)
     expect(inMemoryUsersRepository.items).toHaveLength(1)
   })
