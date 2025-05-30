@@ -1,5 +1,7 @@
 import { Role, User } from '@/domain/fastRoute/enterprise/entities/user'
 import { UsersRepository } from '../../repositories/users-repository'
+import { Either, left, right } from '@/core/repositories/either'
+import { ResourceAlreadyExists } from '../../errors/resource-already-exists-error'
 
 interface CreateUserRequest {
   name: string
@@ -10,9 +12,12 @@ interface CreateUserRequest {
   role: Role[]
 }
 
-interface CreateUserResponse {
-  user: User
-}
+type CreateUserResponse = Either<
+  ResourceAlreadyExists,
+  {
+    user: User
+  }
+>
 
 export class CreateUserUseCase {
   constructor(private usersRepository: UsersRepository) {}
@@ -28,7 +33,7 @@ export class CreateUserUseCase {
     const userAlreadyExists = await this.usersRepository.findByCpf(cpf)
 
     if (userAlreadyExists) {
-      throw new Error('User already exists')
+      return left(new ResourceAlreadyExists('User', `Cpf:${cpf}`))
     }
 
     const passwordHash = password + '-hash'
@@ -43,7 +48,6 @@ export class CreateUserUseCase {
     })
 
     await this.usersRepository.create(user)
-    console.log(user)
-    return { user }
+    return right({ user })
   }
 }
