@@ -1,13 +1,12 @@
 import { InMemoryUsersRepository } from 'test/repositories/in-memory-users-repositort'
 import { InMemoryDeliverymansRepository } from 'test/repositories/in-memory-deliveryman-repository'
 import { MakeUser } from 'test/factories/make-user'
-import { UpdateDeliverymanStatusUseCase } from './UpdateDeliverymanStatus'
 import { MakeDeliveryman } from 'test/factories/make-deliveryman'
+import { UpdateDeliverymanStatusUseCase } from './update-deliveryman-status'
 
 let inMemoryUsersRepository: InMemoryUsersRepository
 let inMemoryDeliverymanRepository: InMemoryDeliverymansRepository
 let sut: UpdateDeliverymanStatusUseCase
-
 describe('Update DeliveryMan status', () => {
   beforeEach(() => {
     inMemoryUsersRepository = new InMemoryUsersRepository()

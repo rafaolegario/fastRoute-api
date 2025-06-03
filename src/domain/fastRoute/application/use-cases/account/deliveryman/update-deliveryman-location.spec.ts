@@ -1,8 +1,8 @@
 import { InMemoryUsersRepository } from 'test/repositories/in-memory-users-repositort'
 import { InMemoryDeliverymansRepository } from 'test/repositories/in-memory-deliveryman-repository'
 import { MakeUser } from 'test/factories/make-user'
-import { UpdateDeliverymanLocationUseCase } from './UpdateDeliverymanLocation'
 import { MakeDeliveryman } from 'test/factories/make-deliveryman'
+import { UpdateDeliverymanLocationUseCase } from './update-deliveryman-location'
 
 let inMemoryUsersRepository: InMemoryUsersRepository
 let inMemoryDeliverymanRepository: InMemoryDeliverymansRepository
